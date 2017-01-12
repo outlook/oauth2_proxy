@@ -61,6 +61,7 @@ type OAuthProxy struct {
 	serveMux            http.Handler
 	PassBasicAuth       bool
 	PassGroups          bool
+	FilterGroups        string
 	SkipProviderButton  bool
 	BasicAuthPassword   string
 	PassAccessToken     bool
@@ -200,6 +201,7 @@ func NewOAuthProxy(opts *Options, validator func(string) bool) *OAuthProxy {
 		compiledRegex:      opts.CompiledRegex,
 		PassBasicAuth:      opts.PassBasicAuth,
 		PassGroups:         opts.PassGroups,
+		FilterGroups:       opts.FilterGroups,
 		BasicAuthPassword:  opts.BasicAuthPassword,
 		PassAccessToken:    opts.PassAccessToken,
 		SkipProviderButton: opts.SkipProviderButton,
@@ -490,7 +492,7 @@ func (p *OAuthProxy) OAuthCallback(rw http.ResponseWriter, req *http.Request) {
 
 	session.IDToken = req.Form.Get("id_token")
 	if p.PassGroups && session.IDToken != "" {
-		session.Groups, err = p.provider.GetGroups(session)
+		session.Groups, err = p.provider.GetGroups(session, p.FilterGroups)
 		if err != nil {
 			p.ErrorPage(rw, 500, "Internal Error", "Internal Error")
 			return
