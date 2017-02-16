@@ -75,14 +75,13 @@ func testAzureProvider(hostname string) *AzureProvider {
 			ProfileURL:        &url.URL{},
 			ValidateURL:       &url.URL{},
 			ProtectedResource: &url.URL{},
-			GroupsURL:	   &url.URL{},
 			Scope:             ""})
+
 	if hostname != "" {
 		updateURL(p.Data().LoginURL, hostname)
 		updateURL(p.Data().RedeemURL, hostname)
 		updateURL(p.Data().ProfileURL, hostname)
 		updateURL(p.Data().ValidateURL, hostname)
-		updateURL(p.Data().GroupsURL, hostname)
 		updateURL(p.Data().ProtectedResource, hostname)
 	}
 	return p
@@ -102,8 +101,6 @@ func TestAzureProviderDefaults(t *testing.T) {
 		p.Data().ProfileURL.String())
 	assert.Equal(t, "https://graph.microsoft.com",
 		p.Data().ProtectedResource.String())
-	assert.Equal(t, "https://graph.microsoft.com/v1.0/me/memberOf%3F$select=displayName",
-		p.Data().GroupsURL.String())
 	assert.Equal(t, "",
 		p.Data().ValidateURL.String())
 	assert.Equal(t, "openid", p.Data().Scope)
@@ -131,10 +128,6 @@ func TestAzureProviderOverrides(t *testing.T) {
 			ProtectedResource: &url.URL{
 				Scheme: "https",
 				Host:   "example.com"},
-			GroupsURL: &url.URL{
-				Scheme: "https",
-				Host:   "example.com",
-				Path:   "/v1.0/me/memberOf?$select=displayName"},
 			Scope: "profile"})
 	assert.NotEqual(t, nil, p)
 	assert.Equal(t, "Azure", p.Data().ProviderName)
@@ -148,8 +141,6 @@ func TestAzureProviderOverrides(t *testing.T) {
 		p.Data().ValidateURL.String())
 	assert.Equal(t, "https://example.com",
 		p.Data().ProtectedResource.String())
-	assert.Equal(t, "https://example.com/v1.0/me/memberOf%3F$select=displayName",
-		p.Data().GroupsURL.String())
 	assert.Equal(t, "profile", p.Data().Scope)
 }
 
@@ -168,8 +159,6 @@ func TestAzureSetTenant(t *testing.T) {
 		p.Data().ProtectedResource.String())
 	assert.Equal(t, "",
 		p.Data().ValidateURL.String())
-	assert.Equal(t, "https://graph.microsoft.com/v1.0/me/memberOf%3F$select=displayName",
-		p.Data().GroupsURL.String())
 	assert.Equal(t, "openid", p.Data().Scope)
 }
 

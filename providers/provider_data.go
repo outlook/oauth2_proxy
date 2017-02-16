@@ -13,7 +13,6 @@ type ProviderData struct {
 	ProfileURL        *url.URL
 	ProtectedResource *url.URL
 	ValidateURL       *url.URL
-	GroupsURL         *url.URL
 	Scope             string
 	ApprovalPrompt    string
 }

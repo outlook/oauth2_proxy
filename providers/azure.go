@@ -41,14 +41,6 @@ func NewAzureProvider(p *ProviderData) *AzureProvider {
 		p.ApprovalPrompt = "consent"
 	}
 
-	if p.GroupsURL == nil || p.GroupsURL.String() == "" {
-		p.GroupsURL = &url.URL{
-			Scheme: "https",
-			Host:   "graph.microsoft.com",
-			Path:   "/v1.0/me/memberOf?$select=displayName",
-		}
-	}
-
 
 	return &AzureProvider{ProviderData: p}
 }
@@ -162,7 +154,7 @@ func (p *AzureProvider) GetGroups(s *SessionState, f string) (string, error) {
 	// startswith - not supported  | "https://graph.microsoft.com/v1.0/me/memberOf?$filter=startswith(displayName,%27groupname%27)"
 	// substring - not supported   | "https://graph.microsoft.com/v1.0/me/memberOf?$filter=substring(displayName,0,2)%20eq%20%27groupname%27"
 
-	requestUrl := p.GroupsURL.String()
+	requestUrl := "https://graph.microsoft.com/v1.0/me/memberOf%3F$select=displayName"
 
 	groups := make([]string, 0)
 
